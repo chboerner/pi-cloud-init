@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-ARCH="${ARCH:-armhf}"
+ARCH="${ARCH:-aarch64}"
 
 if [ "$ARCH" = armhf ] ; then
   # workaround for building on 64-bit host (https://github.com/RPi-Distro/pi-gen/issues/271),

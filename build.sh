@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-ARCH="${ARCH:-armhf}"
+ARCH="${ARCH:-aarch64}"
 
 # go to home and fetch pi-gen
 cd /home/vagrant
