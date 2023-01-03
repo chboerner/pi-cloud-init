@@ -19,6 +19,6 @@ fi
 
 apt-get install -y coreutils quilt parted $qemu_package debootstrap zerofree zip \
   dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc \
-  qemu-utils kpartx
+  qemu-utils kpartx pigz
 
 mkdir -p /home/vagrant/pi-cloud-init
