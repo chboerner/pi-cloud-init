@@ -12,3 +12,4 @@ export ENABLE_SSH=1
 export USE_QCOW2=0
 export STAGE_LIST="stage0 stage1 stage2"
 export WORK_DIR="$PWD/work"
+export DISABLE_FIRST_BOOT_USER_RENAME=1
