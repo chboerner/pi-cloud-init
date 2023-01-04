@@ -1,0 +1,21 @@
+#cloud-config
+
+hostname: automation-01
+
+bootcmd:
+# disable ipv6 on all interfaces
+- sysctl net.ipv6.conf.all.disable_ipv6=1
+
+write_files:
+- path: /var/lib/cloud/scripts/per-boot/01-hello-world.sh
+  permissions: "0744"
+  content: |
+    #!/bin/bash
+    echo "Hello cloud-init on Raspberry Pi!"
+    date > /tmp/per-boot-was-here
+- path: /var/lib/cloud/scripts/per-once/01-hello-world.sh
+  permissions: "0744"
+  content: |
+    #!/bin/bash
+    echo "Hello cloud-init on Raspberry Pi!"
+    date > /tmp/per-once-was-here

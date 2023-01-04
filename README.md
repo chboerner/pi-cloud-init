@@ -40,7 +40,7 @@ You can build the image yourself and customize the build along the way by follow
 
 1. Setup a Debian VM using [vagrant](https://www.vagrantup.com/) which will build the image. This provides a clean build environment and additionally works on a Linux as well as macOS.
     ```bash
-    # what image to build: either amrhf (default) or aarch64 (experimental)
+    # what image to build: either amrhf (default) or aarch64
     export ARCH=armhf
     vagrant up --provision
     ```
