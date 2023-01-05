@@ -11,8 +11,9 @@ This repo features a custom [Raspberry Pi OS Lite](https://www.raspberrypi.org/s
     unzip -o 2021-05-10-raspios-buster-$ARCH-lite-cloud-init.zip
     ```
 
-2. Mount the `boot` partition (of the `.img` file) to add `user-data`, `meta-data` and optionally `network-config` files to the root of it. Unmount it again, once added.
-3. Flash image to SD card using [balena etcher](https://www.balena.io/etcher/), [Raspberry Pi Imager](https://www.raspberrypi.org/software/) or similar.
+2. Prepare the cloud-init configuration files and apply them to the image as described in steps 4 and 5 below.
+3. Flash the to SD card or (for newer Raspberry PIs a USB stick) as described in step 7. 
+4. Flash image to SD card using [balena etcher](https://www.balena.io/etcher/), [Raspberry Pi Imager](https://www.raspberrypi.org/software/) or similar.
 4. Insert SD card into Pi and power up! :rocket:
 
 ## Rationale :bulb:
@@ -67,20 +68,24 @@ You can build the image yourself and customize the build along the way by follow
     unzip -o "$zip_file"
     ```
 
-4. Customize `user-data.yaml`, `meta-data.yaml` and `network-config.yaml` for the instance you're setting up.
+4. Customize `user-data`, `meta-data` and `network-config` for the instance you're setting up.
+    - when you're using prepareRaspiImage.sh in the next step, refer to [prepareRaspiImage.md](prepareRaspiImage.md) how to structure the configuration
+    - find sample configurations in examples/
 
-5. Mount boot partition to inject `user-data`, `meta-data` and `network-config`.
-    (It's assuming a macOS machine, but you should be able to accomplish the same using `mount` and `umount` on Linux.)
-    ```bash
-    img_file="${zip_file%.zip}.img" && \
-    volume="$(hdiutil mount "$img_file" | egrep -o '/Volumes/.+')" && \
-    cp meta-data.yaml "$volume"/meta-data && \
-    cp user-data.yaml "$volume"/user-data && \
-    cp network-config.yaml "$volume"/network-config && \
-    device="$(mount | grep "$volume" | cut -f1 -d' ' | egrep -o '/dev/disk.')" && \
-    diskutil umountDisk "$device" && \
-    diskutil eject "$device"
-    ```
+5. Prepare the disk image with the prepared cloud-init configuration
+   1. If you prepared the configuration for use with prepareRaspiImage.sh. refer to [prepareRaspiImage.md](prepareRaspiImage.md) how to apply the configuration to the image
+   2. If you want to apply the changes manually, mount boot partition to inject `user-data`, `meta-data` and `network-config`.
+     (It's assuming a macOS machine, but you should be able to accomplish the same using `mount` and `umount` on Linux.)
+     ```bash
+     img_file="${zip_file%.zip}.img" && \
+     volume="$(hdiutil mount "$img_file" | egrep -o '/Volumes/.+')" && \
+     cp meta-data "$volume"/meta-data && \
+     cp user-data "$volume"/user-data && \
+     cp network-config "$volume"/network-config && \
+     device="$(mount | grep "$volume" | cut -f1 -d' ' | egrep -o '/dev/disk.')" && \
+     diskutil umountDisk "$device" && \
+     diskutil eject "$device"
+     ```
 
 6. Optionally, you can verify the image and cloud-init functionality using [dockerpi](https://github.com/lukechilds/dockerpi) (only works with `armhf` images). It start a Docker container with QEMU in it emulating a Pi. This way you can already verify, that the image and the provided `user-data` is working without flashing a new SD card everytime.
     ```bash
@@ -96,7 +101,9 @@ You can build the image yourself and customize the build along the way by follow
     cloud-init[620]: Cloud-init v. 20.2 finished at Mon, 08 Mar 2021 19:56:08 +0000. Datasource DataSourceNoCloud [seed=/dev/sda1][dsmode=net].  Up 179.17 seconds
     ```
 
-7. Now, flash the image including cloud-init data to SD card, using [balena etcher](https://www.balena.io/etcher/), [Raspberry Pi Imager](https://www.raspberrypi.org/software/) or similar.
+7. Flash the image to a SD card or USB drive
+   1. Flash the image including cloud-init data to SD card, using [balena etcher](https://www.balena.io/etcher/), [Raspberry Pi Imager](https://www.raspberrypi.org/software/) or similar.
+   2. Or use the script burnRaspiImage.sh - refer to the [burnRaspiImage.md](burnRaspiImage.md) for details how to use it.
 
 8. Finally, SSH into your Pi and verify cloud-init functionality. By default, the `pi` user is locked and SSH password authentication is disabled, so make sure to add a custom user with `ssh_authorized_keys` to your `user-data`.
     ```bash
