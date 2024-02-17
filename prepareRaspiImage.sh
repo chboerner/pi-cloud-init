@@ -108,7 +108,7 @@ function unmout_filesystem() {
 
 function get_filesystems() {
   local image=$1
-  LANG=C fdisk -l -o device "$image" | sed -n '/^Device$/,$p' | tail -n +2
+  LANG=C fdisk -l -o device "$image" | sed -n '/^Device$/,/^$/{/Device/! {/^$/! p}}'
 }
 
 
@@ -173,7 +173,8 @@ function main() {
     if [ -e "$mountpoint/cmdline.txt" ]; then
       echo "Found boot filesystem"
       boot_fs=$mountpoint
-    elif [ -e "$mountpoint/usr/bin/rpi-update" ]; then
+    fi
+    if [ -e "$mountpoint/usr/bin/rpi-update" ]; then
       echo "Found root filesystem"
       root_fs=$mountpoint
     fi
